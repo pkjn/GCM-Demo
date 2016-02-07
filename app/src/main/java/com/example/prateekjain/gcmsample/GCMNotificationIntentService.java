@@ -40,8 +40,7 @@ public class GCMNotificationIntentService extends IntentService {
                         + extras.toString());
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE
                     .equals(messageType)) {
-                sendNotification("Message Received from Google GCM Server:nn"
-                        + extras.get(ApplicationConstants.MSG_KEY));
+                sendNotification(extras.get(ApplicationConstants.MSG_KEY).toString());
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);

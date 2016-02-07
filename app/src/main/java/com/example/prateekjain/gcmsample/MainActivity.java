@@ -27,14 +27,15 @@ public class MainActivity extends Activity {
     GoogleCloudMessaging gcmObj;
     Context applicationContext;
     String regId = "";
+    String phoneID="";
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     AsyncTask<Void, Void, String> createRegIdTask;
 
     public static final String REG_ID = "regId";
-    public static final String EMAIL_ID = "eMailId";
-    EditText emailET;
+    public static final String PHONE_ID = "phoneId";
+    EditText phoneET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         applicationContext = getApplicationContext();
-        emailET = (EditText) findViewById(R.id.email);
+        phoneET = (EditText) findViewById(R.id.phone);
 
         prgDialog = new ProgressDialog(this);
         // Set Progress Dialog Text
@@ -54,7 +55,7 @@ public class MainActivity extends Activity {
                 Context.MODE_PRIVATE);
         String registrationId = prefs.getString(REG_ID, "");
 
-        //When Email ID is set in Sharedpref, User will be taken to HomeActivity
+        //When phone ID is set in Sharedpref, User will be taken to HomeActivity
         if (!TextUtils.isEmpty(registrationId)) {
             Intent i = new Intent(applicationContext, HomeActivity.class);
             i.putExtra("regId", registrationId);
@@ -65,28 +66,28 @@ public class MainActivity extends Activity {
 
     // When Register Me button is clicked
     public void RegisterUser(View view) {
-        String emailID = emailET.getText().toString();
+        phoneID = phoneET.getText().toString();
 
-        if (!TextUtils.isEmpty(emailID) && Utility.validate(emailID)) {
+        if (!TextUtils.isEmpty(phoneID) && Utility.validate(phoneID)) {
 
             // Check if Google Play Service is installed in Device
             // Play services is needed to handle GCM stuffs
             if (checkPlayServices()) {
 
                 // Register Device in GCM Server
-                registerInBackground(emailID);
+                registerInBackground(phoneID);
             }
         }
-        // When Email is invalid
+        // When phone is invalid
         else {
-            Toast.makeText(applicationContext, "Please enter valid email",
+            Toast.makeText(applicationContext, "Please enter valid phone",
                     Toast.LENGTH_LONG).show();
         }
 
     }
 
     // AsyncTask to register Device in GCM Server
-    private void registerInBackground(final String emailID) {
+    private void registerInBackground(final String phoneID) {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -110,7 +111,7 @@ public class MainActivity extends Activity {
             protected void onPostExecute(String msg) {
                 if (!TextUtils.isEmpty(regId)) {
                     // Store RegId created by GCM Server in SharedPref
-                    storeRegIdinSharedPref(applicationContext, regId, emailID);
+                    storeRegIdinSharedPref(applicationContext, regId, phoneID);
                     Toast.makeText(
                             applicationContext,
                             "Registered with GCM Server successfully.nn"
@@ -125,14 +126,14 @@ public class MainActivity extends Activity {
         }.execute(null, null, null);
     }
 
-    // Store  RegId and Email entered by User in SharedPref
+    // Store  RegId and phone entered by User in SharedPref
     private void storeRegIdinSharedPref(Context context, String regId,
-                                        String emailID) {
+                                        String phoneID) {
         SharedPreferences prefs = getSharedPreferences("UserDetails",
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(REG_ID, regId);
-        editor.putString(EMAIL_ID, emailID);
+        editor.putString(PHONE_ID, phoneID);
         editor.commit();
         storeRegIdinServer();
 
@@ -142,6 +143,7 @@ public class MainActivity extends Activity {
     private void storeRegIdinServer() {
         prgDialog.show();
         params.put("regId", regId);
+        params.put("phoneId", phoneID);
         // Make RESTful webservice call using AsyncHttpClient object
         AsyncHttpClient client = new AsyncHttpClient();
         client.post(ApplicationConstants.APP_SERVER_URL, params,

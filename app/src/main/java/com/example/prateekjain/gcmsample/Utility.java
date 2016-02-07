@@ -10,8 +10,7 @@ public class Utility {
     private static Pattern pattern;
     private static Matcher matcher;
     //Email Pattern
-    private static final String EMAIL_PATTERN ="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final String PHONE_PATTERN ="[1-9][0-9]{9,14}";
 
     /**
      * Validate Email with regular expression
@@ -20,7 +19,7 @@ public class Utility {
      * @return true for Valid Email and false for Invalid Email
      */
     public static boolean validate(String email) {
-        pattern = Pattern.compile(EMAIL_PATTERN);
+        pattern = Pattern.compile(PHONE_PATTERN);
         matcher = pattern.matcher(email);
         return matcher.matches();
     }
