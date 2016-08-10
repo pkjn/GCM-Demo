@@ -18,7 +18,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
 import java.io.IOException;
 
 public class MainActivity extends Activity {
@@ -30,8 +29,6 @@ public class MainActivity extends Activity {
     String phoneID="";
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
-    AsyncTask<Void, Void, String> createRegIdTask;
 
     public static final String REG_ID = "regId";
     public static final String PHONE_ID = "phoneId";
@@ -91,7 +88,7 @@ public class MainActivity extends Activity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                String msg = "";
+                String msg;
                 try {
                     if (gcmObj == null) {
                         gcmObj = GoogleCloudMessaging
